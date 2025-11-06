@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasobilka</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        select, button {
+            margin-right: 10px;
+        }
+        #exercises div {
+            margin-bottom: 10px;
+        }
+        input {
+            width: 50px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label>Max X: 
+            <select id="maxX">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10" selected>10</option>
+            </select>
+        </label>
+        <label>Max Y: 
+            <select id="maxY">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10" selected>10</option>
+            </select>
+        </label>
+        <button onclick="generateExercises()">Generate</button>
+    </div>
+    <div id="exercises"></div>
+
+    <script>
+        function generateExercises() {
+            const maxX = parseInt(document.getElementById('maxX').value);
+            const maxY = parseInt(document.getElementById('maxY').value);
+            let exercises = [];
+
+            // Generate 8 multiplication exercises
+            for (let i = 0; i < 8; i++) {
+                const a = Math.floor(Math.random() * maxX) + 1;
+                const b = Math.floor(Math.random() * maxY) + 1;
+                const q = `${a} x ${b} = `;
+                const ans = a * b;
+                exercises.push({ q, ans });
+            }
+
+            // Generate 8 division exercises
+            for (let i = 0; i < 8; i++) {
+                const a = Math.floor(Math.random() * maxX) + 1;
+                const b = Math.floor(Math.random() * maxY) + 1;
+                const product = a * b;
+                const q = `${product} : ${b} = `;
+                const ans = a;
+                exercises.push({ q, ans });
+            }
+
+            // Shuffle the exercises
+            exercises = exercises.sort(() => Math.random() - 0.5);
+
+            // Build HTML
+            let html = '';
+            exercises.forEach((ex, idx) => {
+                html += `<div>${idx + 1}. ${ex.q} <input type="text" id="ans${idx}" value="${ex.ans}" readonly style="color: transparent; background-color: transparent; border: 1px solid black;" onclick="this.style.color = 'black';"></div>`;
+            });
+
+            document.getElementById('exercises').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
