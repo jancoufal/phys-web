@@ -7,6 +7,7 @@
     <style>
         body {
             font-family: monospace;
+            font-size: 120%;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -17,16 +18,29 @@
         select, button {
             margin-right: 10px;
         }
+        .ex-index {
+            color: lightgray;
+        }
+        #exercises {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
         #exercises div {
-            margin-bottom: 10px;
+            margin-bottom: 0;
         }
         input {
-            width: 50px;
+            font-family: monospace;
+            width: 25px;
             text-align: center;
+            font-size: 110%;
         }
         @media (max-width: 600px) {
             body {
                 padding: 10px;
+            }
+            #exercises {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -61,7 +75,7 @@
                 <option value="10" selected>10</option>
             </select>
         </label>
-        <button onclick="generateExercises()">Generate</button>
+        <button onclick="generateExercises()">Generuj</button>
     </div>
     <div id="exercises"></div>
 
@@ -96,11 +110,13 @@
             // Build HTML
             let html = '';
             exercises.forEach((ex, idx) => {
-                html += `<div>${idx + 1}. ${ex.q} <input type="text" id="ans${idx}" value="${ex.ans}" readonly style="color: transparent; background-color: transparent; border: 1px solid black;" onclick="this.style.color = 'black';"></div>`;
+                html += `<div><b class="ex-index">${idx + 1}.</b> ${ex.q} <input type="text" id="ans${idx}" value="${ex.ans}" readonly style="color: transparent; background-color: transparent; border: 1px solid black;" onmouseover="this.style.color = 'black';" onclick="this.style.color = 'black';"></div>`;
             });
 
             document.getElementById('exercises').innerHTML = html;
         }
+
+        generateExercises();
     </script>
 </body>
 </html>
