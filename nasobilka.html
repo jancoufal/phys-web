@@ -29,11 +29,14 @@
         #exercises div {
             margin-bottom: 0;
         }
-        input {
-            font-family: monospace;
-            width: 25px;
-            text-align: center;
+        .placeholder {
             font-size: 110%;
+            font-family: monospace;
+        }
+        .answer {
+            display: none;
+            font-size: 110%;
+            font-family: monospace;
         }
         @media (max-width: 600px) {
             body {
@@ -76,6 +79,7 @@
             </select>
         </label>
         <button onclick="generateExercises()">Generuj</button>
+        <button id="toggleButton" onclick="toggleAnswers()">Zobraz odpovědi</button>
     </div>
     <div id="exercises"></div>
 
@@ -110,10 +114,25 @@
             // Build HTML
             let html = '';
             exercises.forEach((ex, idx) => {
-                html += `<div><b class="ex-index">${idx + 1}.</b> ${ex.q} <input type="text" id="ans${idx}" value="${ex.ans}" readonly style="color: transparent; background-color: transparent; border: 1px solid black;" onmouseover="this.style.color = 'black';" onclick="this.style.color = 'black';"></div>`;
+                html += `<div><b class="ex-index">${idx + 1}.</b> ${ex.q} <span class="placeholder" id="placeholder${idx}">?</span><span class="answer" id="ans${idx}">${ex.ans}</span></div>`;
             });
 
             document.getElementById('exercises').innerHTML = html;
+            document.getElementById('toggleButton').textContent = 'Zobraz odpovědi';
+        }
+        function toggleAnswers() {
+            const answers = document.querySelectorAll('.answer');
+            const placeholders = document.querySelectorAll('.placeholder');
+            const button = document.getElementById('toggleButton');
+            if (answers.length > 0 && (answers[0].style.display === 'none' || answers[0].style.display === '')) {
+                answers.forEach(ans => ans.style.display = 'inline');
+                placeholders.forEach(pl => pl.style.display = 'none');
+                button.textContent = 'Schovej odpovědi';
+            } else {
+                answers.forEach(ans => ans.style.display = 'none');
+                placeholders.forEach(pl => pl.style.display = 'inline');
+                button.textContent = 'Zobraz odpovědi';
+            }
         }
 
         generateExercises();
