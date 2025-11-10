@@ -89,27 +89,52 @@
             const maxY = parseInt(document.getElementById('maxY').value);
             let exercises = [];
 
-            // Generate 8 multiplication exercises
-            for (let i = 0; i < 8; i++) {
-                const a = Math.floor(Math.random() * maxX) + 1;
-                const b = Math.floor(Math.random() * maxY) + 1;
-                const q = `${a} x ${b} = `;
-                const ans = a * b;
-                exercises.push({ q, ans });
+            // Helper to generate all possible unique pairs for mult or div
+            function getUniqueExercises(type, count) {
+                let possibles = [];
+                for (let a = 1; a <= maxX; a++) {
+                    for (let b = 1; b <= maxY; b++) {
+                        let q, ans;
+                        if (type === 'mult') {
+                            q = `${a} x ${b} = `;
+                            ans = a * b;
+                        } else {
+                            const product = a * b;
+                            q = `${product} : ${b} = `;
+                            ans = a;
+                        }
+                        possibles.push({ q, ans });
+                    }
+                }
+                // Shuffle possibles
+                for (let i = possibles.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [possibles[i], possibles[j]] = [possibles[j], possibles[i]];
+                }
+                // If enough uniques, take first 'count'
+                if (possibles.length >= count) {
+                    return possibles.slice(0, count);
+                } else {
+                    // Otherwise, take all and duplicate randomly to fill
+                    let result = [...possibles];
+                    while (result.length < count) {
+                        const randomIdx = Math.floor(Math.random() * possibles.length);
+                        result.push(possibles[randomIdx]);
+                    }
+                    return result;
+                }
             }
 
-            // Generate 8 division exercises
-            for (let i = 0; i < 8; i++) {
-                const a = Math.floor(Math.random() * maxX) + 1;
-                const b = Math.floor(Math.random() * maxY) + 1;
-                const product = a * b;
-                const q = `${product} : ${b} = `;
-                const ans = a;
-                exercises.push({ q, ans });
-            }
+            // Get 8 mult and 8 div
+            const multExercises = getUniqueExercises('mult', 8);
+            const divExercises = getUniqueExercises('div', 8);
+            exercises = [...multExercises, ...divExercises];
 
-            // Shuffle the exercises
-            exercises = exercises.sort(() => Math.random() - 0.5);
+            // Fisher-Yates shuffle combined
+            for (let i = exercises.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+            }
 
             // Build HTML
             let html = '';
